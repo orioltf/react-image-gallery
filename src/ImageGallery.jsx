@@ -707,7 +707,9 @@ export default class ImageGallery extends React.Component {
                 <a
                   className={
                     `image-gallery-fullscreen-button${isFullscreen ? ' active' : ''}`}
-                  onClick={this._toggleFullScreen.bind(this)}/>
+                  onClick={this._toggleFullScreen.bind(this)}>
+                  <span className='visually-hidden'>{this.props.fullScreenText}</span>
+                </a>
             }
 
             {
@@ -843,6 +845,7 @@ ImageGallery.propTypes = {
   renderItem: React.PropTypes.func,
   goToPreviousText: React.PropTypes.string,
   goToNextText: React.PropTypes.string,
+  fullScreenText: React.PropTypes.string
 };
 
 ImageGallery.defaultProps = {
@@ -864,5 +867,6 @@ ImageGallery.defaultProps = {
   startIndex: 0,
   slideInterval: 3000,
   goToPreviousText: 'Next Slide',
-  goToNextText: 'Previous Slide'
+  goToNextText: 'Previous Slide',
+  fullScreenText: 'Show gallery fullscreen'
 };
