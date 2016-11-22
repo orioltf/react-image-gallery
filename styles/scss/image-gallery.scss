@@ -93,6 +93,8 @@ $ig-transparent: rgba(0, 0, 0, 0) !default;
 .image-gallery-fullscreen-button,
 .image-gallery-play-button {
   bottom: 0;
+  background: none;
+  border: none;
 
   &::before {
     font-size: 1.7em;
