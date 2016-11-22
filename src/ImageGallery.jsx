@@ -720,7 +720,9 @@ export default class ImageGallery extends React.Component {
                   ref={p => this._playButton = p}
                   className={
                     `image-gallery-play-button${isPlaying ? ' active' : ''}`}
-                  onClick={this._togglePlay.bind(this)}></button>
+                  onClick={this._togglePlay.bind(this)}>
+                    <span className='visually-hidden'>{this.props.playText}</span>
+                  </button>
             }
 
             {
@@ -847,7 +849,8 @@ ImageGallery.propTypes = {
   renderItem: React.PropTypes.func,
   goToPreviousText: React.PropTypes.string,
   goToNextText: React.PropTypes.string,
-  fullScreenText: React.PropTypes.string
+  fullScreenText: React.PropTypes.string,
+  playText: React.PropTypes.string
 };
 
 ImageGallery.defaultProps = {
@@ -870,5 +873,6 @@ ImageGallery.defaultProps = {
   slideInterval: 3000,
   goToPreviousText: 'Next Slide',
   goToNextText: 'Previous Slide',
-  fullScreenText: 'Show gallery fullscreen'
+  fullScreenText: 'Show gallery fullscreen',
+  playText: 'Play slideshow'
 };
