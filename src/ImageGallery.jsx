@@ -687,6 +687,7 @@ export default class ImageGallery extends React.Component {
                 currentIndex === index ? 'active' : '')}
 
             onClick={event => this.slideToIndex.call(this, index, event)}>
+              <span className='visually-hidden'>{index+1}</span>
           </button>
         );
       }
