@@ -157,7 +157,7 @@ $ig-transparent: rgba(0, 0, 0, 0) !default;
   border: 0;
   color: $ig-white;
   font-size: 5em;
-  outline: none;
+  // outline: none;
   padding: 50px 15px;
   top: 50%;
   transform: translateY(-50%);
@@ -257,7 +257,7 @@ $ig-transparent: rgba(0, 0, 0, 0) !default;
     cursor: pointer;
     display: inline-block;
     margin: 0 5px;
-    outline: none;
+    // outline: none;
     padding: 5px;
 
     @media (max-width: $ig-screen-sm-min) {
