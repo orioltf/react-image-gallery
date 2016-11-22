@@ -704,12 +704,13 @@ export default class ImageGallery extends React.Component {
 
             {
               this.props.showFullscreenButton &&
-                <a
+                <button
+                  type='button'
                   className={
                     `image-gallery-fullscreen-button${isFullscreen ? ' active' : ''}`}
                   onClick={this._toggleFullScreen.bind(this)}>
                   <span className='visually-hidden'>{this.props.fullScreenText}</span>
-                </a>
+                </button>
             }
 
             {
