@@ -149,6 +149,8 @@ class MyComponent extends React.Component {
         )
       }
     ```
+* `goToPreviousText`: String, default `Next Slide`
+* `goToNextText`: String, default `Previous Slide`
 
 
 # Functions

@@ -728,13 +728,17 @@ export default class ImageGallery extends React.Component {
                         type='button'
                         className='image-gallery-left-nav'
                         disabled={!this._canSlideLeft()}
-                        onClick={slideLeft}/>
+                        onClick={slideLeft}>
+                          <span className='visually-hidden'>{this.props.goToNextText}</span>
+                        </button>
 
                       <button
                         type='button'
                         className='image-gallery-right-nav'
                         disabled={!this._canSlideRight()}
-                        onClick={slideRight}/>
+                        onClick={slideRight}>
+                          <span className='visually-hidden'>{this.props.goToPreviousText}</span>
+                        </button>
                     </span>,
 
                     this.props.disableSwipe ?
@@ -837,6 +841,8 @@ ImageGallery.propTypes = {
   onImageError: React.PropTypes.func,
   onThumbnailError: React.PropTypes.func,
   renderItem: React.PropTypes.func,
+  goToPreviousText: React.PropTypes.string,
+  goToNextText: React.PropTypes.string,
 };
 
 ImageGallery.defaultProps = {
@@ -856,5 +862,7 @@ ImageGallery.defaultProps = {
   disableSwipe: false,
   indexSeparator: ' / ',
   startIndex: 0,
-  slideInterval: 3000
+  slideInterval: 3000,
+  goToPreviousText: 'Next Slide',
+  goToNextText: 'Previous Slide'
 };
