@@ -14,6 +14,21 @@ $ig-transparent: rgba(0, 0, 0, 0) !default;
   }
 }
 
+@mixin visuallyhidden() {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+.visually-hidden {
+	@include visuallyhidden;
+}
+
 .image-gallery {
   @include vendor-prefix('user-select', none);
   -webkit-tap-highlight-color: $ig-transparent;
