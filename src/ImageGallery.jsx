@@ -715,11 +715,12 @@ export default class ImageGallery extends React.Component {
 
             {
               this.props.showPlayButton &&
-                <a
+                <button
+                  type='button'
                   ref={p => this._playButton = p}
                   className={
                     `image-gallery-play-button${isPlaying ? ' active' : ''}`}
-                  onClick={this._togglePlay.bind(this)}/>
+                  onClick={this._togglePlay.bind(this)}></button>
             }
 
             {
