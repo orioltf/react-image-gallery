@@ -12,6 +12,11 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var watchify = require('watchify');
 
+var babelOptions = {
+  plugins: ['transform-object-assign'],
+  presets: ['es2015', 'react', 'stage-0']
+};
+
 gulp.task('server', function () {
   connect.server({
     host: '0.0.0.0',
@@ -29,15 +34,20 @@ gulp.task('sass', function () {
     .pipe(livereload());
 });
 
+gulp.task('sass-no-icon', function () {
+  gulp.src('./styles/scss/image-gallery-no-icon.scss')
+    .pipe(sass())
+    .pipe(rename('image-gallery-no-icon.css'))
+    .pipe(gulp.dest('./styles/css/'))
+    .pipe(livereload());
+});
+
 gulp.task('scripts', function() {
   watchify(browserify({
     entries: './example/app.js',
     extensions: ['.jsx'],
     debug: true
-  }).transform('babelify', {
-      plugins: ['transform-object-assign'],
-      presets: ['es2015', 'react']
-    }))
+  }).transform('babelify', babelOptions))
     .bundle()
     .pipe(source('example.js'))
     .pipe(buffer())
@@ -51,10 +61,7 @@ gulp.task('demo-src', function() {
     entries: './example/app.js',
     extensions: ['.jsx'],
     debug: true
-  }).transform('babelify', {
-      plugins: ['transform-object-assign'],
-      presets: ['es2015', 'react']
-    })
+  }).transform('babelify', babelOptions)
     .bundle()
     .pipe(source('demo.js'))
     .pipe(buffer())
@@ -70,10 +77,7 @@ gulp.task('demo-src', function() {
 gulp.task('source-js', function () {
   return gulp.src('./src/ImageGallery.jsx')
     .pipe(concat('image-gallery.js'))
-    .pipe(babel({
-      plugins: ['transform-object-assign'],
-      presets: ['es2015', 'react']
-    }))
+    .pipe(babel(babelOptions))
     .pipe(gulp.dest('./build'));
 });
 
@@ -84,5 +88,5 @@ gulp.task('watch', function() {
 });
 
 gulp.task('dev', ['watch', 'scripts', 'sass', 'server']);
-gulp.task('build', ['source-js', 'sass']);
+gulp.task('build', ['source-js', 'sass', 'sass-no-icon']);
 gulp.task('demo', ['demo-src']);

@@ -11,7 +11,6 @@ class App extends React.Component {
     super();
     this.state = {
       showIndex: false,
-      slideOnThumbnailHover: false,
       showBullets: true,
       infinite: true,
       showThumbnails: true,
@@ -20,13 +19,48 @@ class App extends React.Component {
       showPlayButton: true,
       showGalleryPlayButton: true,
       showNav: true,
+      isRTL: false,
+      slideDuration: 450,
       slideInterval: 2000,
+      thumbnailPosition: 'bottom',
       showVideo: {},
     };
+
+    this.images = [
+      {
+        thumbnail: `${PREFIX_URL}4v.jpg`,
+        original: `${PREFIX_URL}4v.jpg`,
+        embedUrl: 'https://www.youtube.com/embed/4pSzhZ76GdM?autoplay=1&showinfo=0',
+        description: 'Render custom slides within the gallery',
+        renderItem: this._renderVideo.bind(this)
+      },
+      {
+        original: `${PREFIX_URL}image_set_default.jpg`,
+        thumbnail: `${PREFIX_URL}image_set_thumb.jpg`,
+        imageSet: [
+          {
+            srcSet: `${PREFIX_URL}image_set_cropped.jpg`,
+            media : '(max-width: 1280px)',
+          },
+          {
+            srcSet: `${PREFIX_URL}image_set_default.jpg`,
+            media : '(min-width: 1280px)',
+          }
+        ]
+      },
+      {
+        original: `${PREFIX_URL}1.jpg`,
+        thumbnail: `${PREFIX_URL}1t.jpg`,
+        originalClass: 'featured-slide',
+        thumbnailClass: 'featured-thumb',
+        description: 'Custom class for slides & thumbnails'
+      },
+    ].concat(this._getStaticImages());
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.slideInterval !== prevState.slideInterval) {
+    if (this.state.slideInterval !== prevState.slideInterval ||
+        this.state.slideDuration !== prevState.slideDuration) {
       // refresh setInterval
       this._imageGallery.pause();
       this._imageGallery.play();
@@ -64,6 +98,10 @@ class App extends React.Component {
 
   _handleCheckboxChange(state, event) {
     this.setState({[state]: event.target.checked});
+  }
+
+  _handleThumbnailPositionChange(event) {
+    this.setState({thumbnailPosition: event.target.value});
   }
 
   _getStaticImages() {
@@ -147,35 +185,12 @@ class App extends React.Component {
   }
 
   render() {
-    const images = [
-      {
-        original: `${PREFIX_URL}1.jpg`,
-        thumbnail: `${PREFIX_URL}1t.jpg`,
-        originalClass: 'featured-slide',
-        thumbnailClass: 'featured-thumb',
-        description: 'Custom class for slides & thumbnails'
-      },
-      {
-        thumbnail: `${PREFIX_URL}3v.jpg`,
-        original: `${PREFIX_URL}3v.jpg`,
-        embedUrl: 'https://www.youtube.com/embed/iNJdPyoqt8U?autoplay=1&showinfo=0',
-        description: 'Render custom slides within the gallery',
-        renderItem: this._renderVideo.bind(this)
-      },
-      {
-        thumbnail: `${PREFIX_URL}4v.jpg`,
-        original: `${PREFIX_URL}4v.jpg`,
-        embedUrl: 'https://www.youtube.com/embed/4pSzhZ76GdM?autoplay=1&showinfo=0',
-        renderItem: this._renderVideo.bind(this)
-      }
-    ].concat(this._getStaticImages());
-
     return (
 
       <section className='app'>
         <ImageGallery
           ref={i => this._imageGallery = i}
-          items={images}
+          items={this.images}
           lazyLoad={false}
           onClick={this._onImageClick.bind(this)}
           onImageLoad={this._onImageLoad}
@@ -190,8 +205,11 @@ class App extends React.Component {
           showThumbnails={this.state.showThumbnails}
           showIndex={this.state.showIndex}
           showNav={this.state.showNav}
+          isRTL={this.state.isRTL}
+          thumbnailPosition={this.state.thumbnailPosition}
+          slideDuration={parseInt(this.state.slideDuration)}
           slideInterval={parseInt(this.state.slideInterval)}
-          slideOnThumbnailHover={this.state.slideOnThumbnailHover}
+          additionalClass="app-image-gallery"
         />
 
         <div className='app-sandbox'>
@@ -208,6 +226,33 @@ class App extends React.Component {
                     type='text'
                     onChange={this._handleInputChange.bind(this, 'slideInterval')}
                     value={this.state.slideInterval}/>
+                </div>
+              </li>
+
+              <li>
+                <div className='app-interval-input-group'>
+                  <span className='app-interval-label'>Slide Duration</span>
+                  <input
+                    className='app-interval-input'
+                    type='text'
+                    onChange={this._handleInputChange.bind(this, 'slideDuration')}
+                    value={this.state.slideDuration}/>
+                </div>
+              </li>
+
+              <li>
+                <div className='app-interval-input-group'>
+                  <span className='app-interval-label'>Thumbnail Bar Position</span>
+                  <select
+                    className='app-interval-input'
+                    value={this.state.thumbnailPosition}
+                    onChange={this._handleThumbnailPositionChange.bind(this)}
+                  >
+                    <option value='bottom'>Bottom</option>
+                    <option value='top'>Top</option>
+                    <option value='left'>Left</option>
+                    <option value='right'>Right</option>
+                  </select>
                 </div>
               </li>
             </ul>
@@ -277,6 +322,14 @@ class App extends React.Component {
                   checked={this.state.slideOnThumbnailHover}/>
                   <label htmlFor='slide_on_thumbnail_hover'>slide on thumbnail hover (desktop)</label>
               </li>
+              <li>
+                <input
+                  id='is_rtl'
+                  type='checkbox'
+                  onChange={this._handleCheckboxChange.bind(this, 'isRTL')}
+                  checked={this.state.isRTL}/>
+                  <label htmlFor='is_rtl'>is right to left</label>
+              </li>
             </ul>
           </div>
 
@@ -287,4 +340,3 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App/>, document.getElementById('container'));
-
