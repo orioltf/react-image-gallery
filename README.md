@@ -3,77 +3,66 @@ React Carousel Image Gallery
 
 [![npm version](https://badge.fury.io/js/react-image-gallery.svg)](https://badge.fury.io/js/react-image-gallery)
 [![Download Count](http://img.shields.io/npm/dm/react-image-gallery.svg?style=flat)](http://www.npmjs.com/package/react-image-gallery)
-[![Donate](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.me/xiaonil)
 
-## Live Demo (try it on mobile for swipe support)
-Live demo: [`linxtion.com/demo/react-image-gallery`](http://linxtion.com/demo/react-image-gallery)
+### Live Demo (try it on mobile for swipe support)
+[`linxtion.com/demo/react-image-gallery`](http://linxtion.com/demo/react-image-gallery)
 
-![demo gif](https://github.com/xiaolin/react-image-gallery/raw/master/static/image_gallery.gif)
+![demo gif](https://github.com/xiaolin/react-image-gallery/raw/master/static/image_gallery_v1.0.2.gif)
 
 React image gallery is a React component for building image galleries and carousels
 
-Features of `react-image-gallery`
-* Mobile Swipe Gestures
-* Thumbnail Navigation
-* Fullscreen Support
-* Custom Rendered Slides
-* Responsive Design
+## Features
+
+* Mobile swipe gestures
+* Thumbnail navigation
+* Fullscreen support
+* Custom rendered slides
+* RTL support
+* Responsive design
 * Tons of customization options (see props below)
-* Lightweight ~8kb (gzipped, excluding react)
+* Lightweight ~7kb gzipped
 
 ## Getting started
+
+React Image Gallery requires **React 16.0.0 or later.**
 
 ```
 npm install react-image-gallery
 ```
 
-### Style import
-
+### Style import (with webpack)
 ```
 # SCSS
-@import "node_modules/react-image-gallery/styles/scss/image-gallery.scss";
+@import "~react-image-gallery/styles/scss/image-gallery.scss";
 
 # CSS
-@import "node_modules/react-image-gallery/styles/css/image-gallery.css";
-
-# Webpack
-import "react-image-gallery/styles/css/image-gallery.css";
-
-# Stylesheet with no icons
-node_modules/react-image-gallery/styles/scss/image-gallery-no-icon.scss
-node_modules/react-image-gallery/styles/css/image-gallery-no-icon.css
+@import "~react-image-gallery/styles/css/image-gallery.css";
 ```
-
 
 ### Example
 Need more example? See [`example/app.js`](https://github.com/xiaolin/react-image-gallery/blob/master/example/app.js)
 ```js
 import ImageGallery from 'react-image-gallery';
 
-class MyComponent extends React.Component {
+const images = [
+  {
+    original: 'https://picsum.photos/id/1018/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1018/250/150/',
+  },
+  {
+    original: 'https://picsum.photos/id/1015/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1015/250/150/',
+  },
+  {
+    original: 'https://picsum.photos/id/1019/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1019/250/150/',
+  },
+];
 
+class MyGallery extends React.Component {
   render() {
-
-    const images = [
-      {
-        original: 'http://lorempixel.com/1000/600/nature/1/',
-        thumbnail: 'http://lorempixel.com/250/150/nature/1/',
-      },
-      {
-        original: 'http://lorempixel.com/1000/600/nature/2/',
-        thumbnail: 'http://lorempixel.com/250/150/nature/2/'
-      },
-      {
-        original: 'http://lorempixel.com/1000/600/nature/3/',
-        thumbnail: 'http://lorempixel.com/250/150/nature/3/'
-      }
-    ]
-
-    return (
-      <ImageGallery items={images} />
-    );
+    return <ImageGallery items={images} />;
   }
-
 }
 ```
 
@@ -83,6 +72,7 @@ class MyComponent extends React.Component {
   * Available Properties
     * `original` - image src url
     * `thumbnail` - image thumbnail src url
+    * `fullscreen` - image for fullscreen (defaults to original)
     * `originalClass` - custom image class
     * `thumbnailClass` - custom thumbnail class
     * `renderItem` - Function for custom renderer (see renderItem below)
@@ -119,10 +109,10 @@ class MyComponent extends React.Component {
 * `autoPlay`: Boolean, default `false`
 * `disableThumbnailScroll`: Boolean, default `false`
   * disables the thumbnail container from adjusting
-* `disableArrowKeys`: Boolean, default `false`
-  * disables keydown listener for left and right keyboard arrow keys
+* `disableKeyDown`: Boolean, default `false`
+  * disables keydown listener for keyboard shortcuts (left arrow, right arrow, esc key)
 * `disableSwipe`: Boolean, default `false`
-* `defaultImage`: String, default `undefined`
+* `onErrorImageURL`: String, default `undefined`
   * an image src pointing to your default image if an image fails to load
   * handles both slide image, and thumbnail image
 * `indexSeparator`: String, default `' / '`, ignored if `showIndex` is false
@@ -131,6 +121,7 @@ class MyComponent extends React.Component {
 * `swipingTransitionDuration`: Number, default `0`
   * transition duration while swiping in milliseconds
 * `slideInterval`: Number, default `3000`
+* `slideOnThumbnailOver`: Boolean, default `false`
 * `flickThreshold`: Number (float), default `0.4`
   * Determines the max velocity of a swipe before it's considered a flick (lower = more sensitive)
 * `swipeThreshold`: Number, default `30`
@@ -142,13 +133,15 @@ class MyComponent extends React.Component {
     * An option to prevent the browser's touchmove event (stops the gallery from scrolling up or down when swiping)
 * `startIndex`: Number, default `0`
 * `onImageError`: Function, `callback(event)`
-  * overrides defaultImage
+  * overrides onErrorImage
 * `onThumbnailError`: Function, `callback(event)`
-  * overrides defaultImage
+  * overrides onErrorImage
 * `onThumbnailClick`: Function, `callback(event, index)`
 * `onImageLoad`: Function, `callback(event)`
 * `onSlide`: Function, `callback(currentIndex)`
-* `onScreenChange`: Function, `callback(fullscreenElement)`
+* `onBeforeSlide`: Function, `callback(nextIndex)`
+* `onScreenChange`: Function, `callback(boolean)`
+  * When fullscreen is toggled a boolean is passed to the callback
 * `onPause`: Function, `callback(currentIndex)`
 * `onPlay`: Function, `callback(currentIndex)`
 * `onClick`: Function, `callback(event)`
@@ -235,6 +228,8 @@ class MyComponent extends React.Component {
 
 # Functions
 
+The following functions can be accessed using [refs](https://reactjs.org/docs/refs-and-the-dom.html)
+
 * `play()`: plays the slides
 * `pause()`: pauses the slides
 * `fullScreen()`: activates full screen
@@ -244,9 +239,10 @@ class MyComponent extends React.Component {
 
 # Contributing
 
+Each PR should be specific and isolated to the issue you're trying to fix. Please do not stack features/chores/refactors/enhancements in one PR. Describe your feature/implementation in the PR. If you're unsure its useful or if it is a major change, please open an issue first and get feedback.
+
 * Follow eslint provided
 * Comment your code
-* Describe your feature/implementation in the pullrequest
 * Write [clean](https://github.com/ryanmcdermott/clean-code-javascript) code
 
 # Build the example locally
@@ -259,7 +255,6 @@ npm start
 ```
 
 Then open [`localhost:8001`](http://localhost:8001) in a browser.
-
 
 # License
 
